@@ -1,8 +1,16 @@
 .searchbar {
-  background-color: orange;
+  background-color: #2256a7;
   padding: 15px;
+  display: flex;
+  justify-content: center;
 }
 
 .field {
+  max-width: 1024px;
   width: 100%;
+  border-radius: 10px;
+  // border: 2px solid #2256a7;
+  border: none;
+  padding: 10px 20px;
+  font-size: 20px;
 }
