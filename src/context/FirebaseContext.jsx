@@ -2,7 +2,8 @@ import { createContext, useState } from "react";
 import { initializeApp } from "firebase/app";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { getAuth, signInAnonymously } from "firebase/auth";
-// import { getStorage } from "firebase/storage";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+// import { v4 as uuid } from "uuid";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -18,14 +19,16 @@ export const FirebaseContext = createContext();
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth();
-// const storage = getStorage(app);
+const storage = getStorage(app);
 
 const FirebaseProvider = ({ children }) => {
   // Declarations
   const [user, setUser] = useState();
   const [isLogin, setLogin] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [documents, setDocuments] = useState([]);
 
+  // Methods
   const login = () => {
     console.log("login");
   };
@@ -43,7 +46,20 @@ const FirebaseProvider = ({ children }) => {
     }
   };
 
-  // Methods
+  // const getFileName = () => {
+  // const files = ["gs://protolibrary-cuam.appspot.com/Himno-del-CUAM.mp3"];
+
+  // files.forEach((item) => {
+  // getDownloadURL(ref(storage, item))
+  // .then((res) => {
+  // console.log(res);
+  // })
+  // .catch((err) => {
+  // console.log(err);
+  // });
+  // });
+  // };
+
   const getCategories = async () => {
     try {
       if (user === undefined) {
@@ -59,6 +75,21 @@ const FirebaseProvider = ({ children }) => {
     }
   };
 
+  const firstLoad = async () => {
+    try {
+      if (user === undefined) {
+        throw new Error("Your aren't authenticated");
+      }
+
+      const results = [];
+      const firstLoadItems = await getDocs(collection(db, "firstLoad"));
+      firstLoadItems.forEach((doc) => results.push(doc.data()));
+      setDocuments(results);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   // Render
   return (
     <FirebaseContext.Provider
@@ -69,6 +100,9 @@ const FirebaseProvider = ({ children }) => {
         anonymousLogin,
         categories,
         getCategories,
+        // getFileName,
+        firstLoad,
+        documents,
       }}
     >
       {children}

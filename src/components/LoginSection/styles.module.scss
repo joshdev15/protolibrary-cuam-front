@@ -1,0 +1,78 @@
+.login {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  width: 100%;
+  margin-top: 30px;
+}
+
+.selector {
+  max-width: 300px;
+  display: flex;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #2256a7;
+  cursor: pointer;
+  & > div {
+    padding: 5px;
+    width: 200px;
+  }
+}
+
+.active {
+  background-color: #2256a7;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+}
+
+.inactive {
+  background-color: white;
+  text-align: center;
+  font-weight: bold;
+  color: #2256a7;
+}
+
+.form {
+  display: flex;
+  flex-flow: column nowrap;
+  margin-top: 30px;
+}
+
+.input[type="text"] {
+  padding: 5px 10px;
+  margin-bottom: 30px;
+  min-width: 300px;
+  border: 1px solid #2256a7;
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+.input[type="submit"] {
+  padding: 5px 10px;
+  margin-bottom: 30px;
+  min-width: 300px;
+  border-radius: 10px;
+  border: none;
+  font-size: 20px;
+  background-color: #2256a7;
+  color: white;
+}
+
+.google {
+  padding: 5px 10px;
+  margin-bottom: 30px;
+  min-width: 300px;
+  border-radius: 10px;
+  border: none;
+  font-size: 20px;
+  background-color: #2256a710;
+  color: #2256a7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  & > img {
+    margin: 0;
+    margin-right: 10px;
+  }
+}

@@ -3,11 +3,14 @@ import { FirebaseContext } from "../../context/FirebaseContext";
 import styles from "./styles.module.scss";
 
 const CategoryBar = () => {
-  const { isLogin, getCategories, categories } = useContext(FirebaseContext);
+  const { isLogin, getCategories, categories, firstLoad } =
+    useContext(FirebaseContext);
 
   useEffect(() => {
-    if (isLogin) getCategories();
-    // eslint-disable-next-line
+    if (isLogin) {
+      getCategories();
+      firstLoad();
+    }
   }, [isLogin]);
 
   return (

@@ -11,10 +11,11 @@
   border: none;
   padding: 10px 20px;
   font-size: 20px;
-  font-weight: 200;
+  font-weight: 300;
   border: 1px solid #2256a7;
-  transition: all ease 0.5s;
+  box-shadow: 0px 0px 0px white;
+  transition: all ease 0.3s;
   &:focus {
-    border: 1px solid skyblue;
+    box-shadow: 0px 3px 5px #2256a7;
   }
 }
