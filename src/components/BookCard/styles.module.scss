@@ -1,0 +1,48 @@
+.card {
+  height: 350px;
+  width: 250px;
+  padding: 5px;
+  position: relative;
+}
+
+.content {
+  background-color: white;
+  height: 100%;
+  border-radius: 5px;
+  border: 1px solid #2256a7;
+  box-shadow: 0px 2px 5px silver;
+  padding: 10px;
+
+  & > .image {
+    border: 1px solid #2256a7;
+    background: rgb(34, 86, 167);
+    background: linear-gradient(
+      144deg,
+      rgba(34, 86, 167, 1) 61%,
+      rgba(226, 29, 36, 1) 100%
+    );
+    width: 100%;
+    height: 230px;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    position: relative;
+    & > img {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  & > h1 {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  & > h2 {
+    font-size: 20px;
+    font-weight: 400;
+  }
+  & > h3 {
+    font-size: 20px;
+    font-weight: 200;
+  }
+}

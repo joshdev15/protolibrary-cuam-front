@@ -1,5 +1,4 @@
 .searchbar {
-  background-color: #2256a7;
   padding: 15px;
   display: flex;
   justify-content: center;
@@ -8,9 +7,14 @@
 .field {
   max-width: 1024px;
   width: 100%;
-  border-radius: 10px;
-  // border: 2px solid #2256a7;
+  border-radius: 30px;
   border: none;
   padding: 10px 20px;
   font-size: 20px;
+  font-weight: 200;
+  border: 1px solid #2256a7;
+  transition: all ease 0.5s;
+  &:focus {
+    border: 1px solid skyblue;
+  }
 }
