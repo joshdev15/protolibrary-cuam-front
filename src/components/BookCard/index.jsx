@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
 import EmptyImage from "assets/empty.png";
 import DownloadImage from "assets/down.png";
+import { Tooltip } from "react-tooltip";
 import styles from "./styles.module.scss";
 
 const BookCard = ({ item }) => {
-  const { name, author, image, url, year } = item;
+  const { name, author, image, url, year, keyId } = item;
 
   const downloadFile = () => {
     window.open(url);
@@ -15,7 +16,20 @@ const BookCard = ({ item }) => {
       <div className={styles.content}>
         <div className={image !== undefined ? styles.image : styles.noimage}>
           <div className={styles.down} onClick={downloadFile}>
-            <img src={DownloadImage} alt={"Download"} width={20} height={20} />
+            <Tooltip
+              anchorId={keyId}
+              data-tooltip-content="Click para descargar"
+              data-tooltip-delay-hide={1000}
+            >
+              Descargar
+            </Tooltip>
+            <img
+              id={keyId}
+              src={DownloadImage}
+              alt={"Download"}
+              width={20}
+              height={20}
+            />
           </div>
           {image !== undefined ? (
             <img src={image} alt={"Document"} />
