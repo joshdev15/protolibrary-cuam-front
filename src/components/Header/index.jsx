@@ -2,6 +2,7 @@ import { useState, useContext, useEffect } from "react";
 import { FirebaseContext } from "context/FirebaseContext";
 import Modal from "components/Modal";
 import LoginSection from "components/LoginSection";
+import SearchBar from "components/SearchBar";
 import styles from "./styles.module.scss";
 
 const Header = () => {
@@ -31,11 +32,14 @@ const Header = () => {
       </Modal>
 
       <div className={styles.header}>
-        <div>Protobiblioteca</div>
+        <div className={styles.title}>Protobiblioteca</div>
+        <SearchBar />
         {user === undefined ? (
-          <div onClick={() => setActive(true)}>Inicio | Registro</div>
+          <div onClick={() => setActive(true)} className={styles.label}>
+            Inicio | Registro
+          </div>
         ) : (
-          <div>{getRoleName(user?.role)}</div>
+          <div className={styles.label}>{getRoleName(user?.role)}</div>
         )}
       </div>
     </>
