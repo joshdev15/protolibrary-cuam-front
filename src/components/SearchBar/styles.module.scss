@@ -1,16 +1,15 @@
 .searchbar {
-  padding: 15px;
   display: flex;
   justify-content: center;
   flex-grow: 1;
 }
 
 .field {
-  max-width: 1024px;
+  max-width: 800px;
   width: 100%;
   border-radius: 30px;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 30px;
   font-size: 20px;
   font-weight: 300;
   border: 1px solid #2256a7;

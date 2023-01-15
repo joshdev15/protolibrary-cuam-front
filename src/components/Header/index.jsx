@@ -32,15 +32,20 @@ const Header = () => {
       </Modal>
 
       <div className={styles.header}>
-        <div className={styles.title}>Protobiblioteca</div>
-        <SearchBar />
-        {user === undefined ? (
-          <div onClick={() => setActive(true)} className={styles.label}>
-            Inicio | Registro
+        <div className={styles.leftContainer}>
+          <div className={styles.titleZone}>
+            <span className={styles.title}>Protobiblioteca</span>
+
+            {user === undefined ? (
+              <div onClick={() => setActive(true)} className={styles.label}>
+                Inicio | Registro
+              </div>
+            ) : (
+              <div className={styles.label}>{getRoleName(user?.role)}</div>
+            )}
           </div>
-        ) : (
-          <div className={styles.label}>{getRoleName(user?.role)}</div>
-        )}
+          <SearchBar />
+        </div>
       </div>
     </>
   );
