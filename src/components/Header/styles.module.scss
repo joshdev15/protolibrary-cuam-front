@@ -15,7 +15,6 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-bottom: 10px;
 
       .title {
         font-weight: 600;
@@ -33,10 +32,15 @@
         font-weight: 600;
         font-size: 12px;
         color: white;
+        cursor: pointer;
         @media (max-width: 500px) {
           display: none;
         }
       }
+    }
+
+    .search {
+      padding-bottom: 10px;
     }
   }
 }

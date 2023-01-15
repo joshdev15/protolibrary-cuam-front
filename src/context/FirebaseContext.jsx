@@ -6,7 +6,7 @@ import {
   getDoc,
   getDocs,
   getFirestore,
-  // addDoc,
+  addDoc,
   setDoc,
 } from "firebase/firestore";
 import {
@@ -123,7 +123,7 @@ const FirebaseProvider = ({ children }) => {
       }
 
       const results = [];
-      const firstLoadItems = await getDocs(collection(db, "firstLoad"));
+      const firstLoadItems = await getDocs(collection(db, "documents"));
       firstLoadItems.forEach((doc) => results.push(doc.data()));
       setDocuments(results);
     } catch (e) {
