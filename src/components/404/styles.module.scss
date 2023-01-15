@@ -1,0 +1,29 @@
+.container {
+  background: linear-gradient(
+    144deg,
+    rgba(34, 86, 167, 1) 61%,
+    rgba(226, 29, 36, 1) 100%
+  );
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  h1 {
+    font-size: 80px;
+  }
+  h2 {
+    font-size: 40px;
+    font-weight: 200;
+  }
+  h3 {
+    font-size: 20px;
+    font-weight: 300;
+    strong {
+      color: aqua;
+      cursor: pointer;
+    }
+  }
+}

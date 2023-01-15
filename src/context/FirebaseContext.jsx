@@ -6,7 +6,7 @@ import {
   getDoc,
   getDocs,
   getFirestore,
-  addDoc,
+  // addDoc,
   setDoc,
 } from "firebase/firestore";
 import {
@@ -15,7 +15,7 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-// import { getStorage [>, ref, getDownloadURL<] } from "firebase/storage";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 // import { v4 as uuid } from "uuid";
 
 const firebaseConfig = {
@@ -32,7 +32,7 @@ export const FirebaseContext = createContext();
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth();
-// const storage = getStorage(app);
+const storage = getStorage(app);
 
 const FirebaseProvider = ({ children }) => {
   // Declarations
@@ -131,18 +131,18 @@ const FirebaseProvider = ({ children }) => {
     }
   };
 
-  // const getFileName = () => {
-  // const files = ["gs://protolibrary-cuam.appspot.com/Himno-del-CUAM.mp3"];
-  // files.forEach((item) => {
-  // getDownloadURL(ref(storage, item))
-  // .then((res) => {
-  // console.log(res);
-  // })
-  // .catch((err) => {
-  // console.log(err);
-  // });
-  // });
-  // };
+  const getFileName = () => {
+    const files = ["gs://protolibrary-cuam.appspot.com/Documento Prueba-1.pdf"];
+    files.forEach((item) => {
+      getDownloadURL(ref(storage, item))
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    });
+  };
 
   // Render
   return (
@@ -156,8 +156,7 @@ const FirebaseProvider = ({ children }) => {
         anonymousLogin,
         categories,
         getCategories,
-
-        // getFileName,
+        getFileName,
         firstLoad,
         documents,
       }}
