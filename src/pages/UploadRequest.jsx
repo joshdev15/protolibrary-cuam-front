@@ -3,6 +3,7 @@ import { FirebaseContext } from "context/FirebaseContext";
 import { useNavigate } from "react-router-dom";
 import HeaderWrapper from "components/HeaderWrapper";
 import Header from "components/Header";
+import UploadList from "components/UploadList";
 
 const UploadFile = () => {
   const { user } = useContext(FirebaseContext);
@@ -17,8 +18,9 @@ const UploadFile = () => {
   return (
     <>
       <HeaderWrapper>
-        <Header title={"Roles de Usuario"} withSearchBar={false} />
+        <Header title={"Solicitud de Nuevo Documento"} withSearchBar={false} />
       </HeaderWrapper>
+      <UploadList />
     </>
   );
 };

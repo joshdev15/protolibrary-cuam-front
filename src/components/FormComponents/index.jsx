@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { FirebaseContext } from "context/FirebaseContext";
 import PropTypes from "prop-types";
 import styles from "./styles.module.scss";
 
 export const Input = (props) => {
   const { label, setValue, keyName } = props;
-  console.log(props);
   return (
     <label className={styles.label}>
       <span>{label}</span>
@@ -24,13 +24,10 @@ Input.propTypes = {
 };
 
 export const File = (props) => {
-  console.log(props);
   const [fileName, setName] = useState();
   const { label, setValue, keyName } = props;
   const fileVerification = (e) => {
     if (e?.target?.files.length > 0) {
-      // console.log(e.target.files[0].name);
-      // console.log(typeof e.target.files[0]);
       setName(e.target.files[0].name);
       setValue(e.target.files[0], keyName);
     }
@@ -53,6 +50,33 @@ export const File = (props) => {
 };
 
 File.propTypes = {
+  label: PropTypes.string,
+  keyName: PropTypes.string,
+  setValue: PropTypes.func,
+};
+
+export const Category = (props) => {
+  const { label, setValue, keyName } = props;
+  const { categories } = useContext(FirebaseContext);
+
+  return (
+    <label className={styles.fileLabel}>
+      <span>{label}</span>
+      <select
+        className={props?.className ? props.className : styles.input}
+        onChange={(e) => setValue(e.target.value, keyName)}
+        {...props}
+      >
+        <option value="">Seleccione una Categoría</option>
+        {categories.map(({ id, name }) => (
+          <option value={id}>{name}</option>
+        ))}
+      </select>
+    </label>
+  );
+};
+
+Category.propTypes = {
   label: PropTypes.string,
   keyName: PropTypes.string,
   setValue: PropTypes.func,

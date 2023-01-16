@@ -9,21 +9,25 @@ const links = [
     key: "home",
     name: "Ir al Inicio",
     route: "/",
+    roles: ["student", "archivist", "admin"],
   },
   {
     key: "upload",
     name: "Subir un nuevo documento",
     route: "/upload-file",
+    roles: ["student", "archivist"],
   },
   {
     key: "requests",
     name: "Ver solicitudes de nuevo documentos",
     route: "/requests",
+    roles: ["archivist", "admin"],
   },
   {
     key: "users",
     name: "Promocion de usuario",
     route: "/user-roles",
+    roles: ["admin"],
   },
 ];
 
@@ -42,15 +46,18 @@ const ProfileModal = () => {
         <div className={styles.actionCont}>
           <h3 className={styles.actionTitle}>Acciones</h3>
 
-          {links.map(({ route, name, key }) => (
-            <p
-              onClick={() => goToRoute(route)}
-              className={styles.link}
-              key={key}
-            >
-              {name}
-            </p>
-          ))}
+          {links.map(
+            ({ route, name, key, roles }) =>
+              roles.includes(user.role) && (
+                <p
+                  onClick={() => goToRoute(route)}
+                  className={styles.link}
+                  key={key}
+                >
+                  {name}
+                </p>
+              )
+          )}
         </div>
       </div>
 

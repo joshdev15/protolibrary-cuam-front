@@ -6,7 +6,6 @@ import {
   getDoc,
   getDocs,
   getFirestore,
-  // addDoc,
   setDoc,
 } from "firebase/firestore";
 import {
@@ -14,6 +13,8 @@ import {
   signInAnonymously,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  browserLocalPersistence,
+  setPersistence,
 } from "firebase/auth";
 import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
 import { v4 as uuid } from "uuid";
@@ -46,6 +47,7 @@ const FirebaseProvider = ({ children }) => {
   const login = async (email, password) => {
     console.log("Login");
     try {
+      await setPersistence(auth, browserLocalPersistence);
       const { user } = await signInWithEmailAndPassword(auth, email, password);
       if (user?.uid) {
         const docRef = doc(db, "users", user.uid);
@@ -89,7 +91,6 @@ const FirebaseProvider = ({ children }) => {
 
   const anonymousLogin = async () => {
     try {
-      // console.log("Anonymous Login");
       const { user } = await signInAnonymously(auth);
       if (user?.uid) {
         setLogin(true);
@@ -155,7 +156,8 @@ const FirebaseProvider = ({ children }) => {
       status: "waiting",
     };
 
-    await setDoc(doc(db, "requests", requestId), requestData);
+    const request = await setDoc(doc(db, "requests", requestId), requestData);
+    return request;
   };
 
   const uploadFile = async (file) => {

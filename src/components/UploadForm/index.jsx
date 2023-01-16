@@ -1,6 +1,6 @@
 import { useContext, useState, useEffect } from "react";
 import { FirebaseContext } from "context/FirebaseContext";
-import { Input, File } from "components/FormComponents";
+import { Input, File, Category } from "components/FormComponents";
 import styles from "./styles.module.scss";
 
 const initialValue = {
@@ -16,6 +16,10 @@ const initialValue = {
     value: "",
     isValid: false,
   },
+  category: {
+    value: "",
+    isValid: false,
+  },
   file: {
     value: "",
     isValid: false,
@@ -28,7 +32,6 @@ const UploadForm = () => {
   const { uploadFile, getFileName, createNewRequest } =
     useContext(FirebaseContext);
   const date = new Date();
-  console.log(date.getFullYear());
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -43,13 +46,15 @@ const UploadForm = () => {
         author: values.author.value,
         name: values.author.value,
         year: values.year.value,
-        categoryId: "",
+        categoryId: values.category.value,
+        owner: user.email,
         isPublic: true,
         url,
       };
 
-      const last = await createNewRequest(data);
-      console.log(last);
+      await createNewRequest(data);
+      document.getElementById("uploadform").reset();
+      setValues(initialValue);
     } catch (err) {
       console.log(err);
     }
@@ -71,6 +76,10 @@ const UploadForm = () => {
       copy[key].isValid = value !== undefined && value > 0 && value <= 2023;
     }
 
+    if (["category"].includes(key)) {
+      copy[key].isValid = !["", " ", false].includes(value);
+    }
+
     setValues(copy);
   };
 
@@ -81,7 +90,23 @@ const UploadForm = () => {
 
   return (
     <div className={styles.container}>
-      <form className={styles.subcontainer} onSubmit={(e) => onSubmit(e)}>
+      <form
+        id="uploadform"
+        className={styles.subcontainer}
+        onSubmit={(e) => onSubmit(e)}
+      >
+        <div className={styles.info}>
+          <h3>Formulario para subir un Nuevo Documento a la biblioteca</h3>
+          <p>
+            Es grato saber que deseas agregar un nuevo documento a la
+            Protobiblioteca, sin embargo, es necesario que sepas que, debes
+            colocar todos los datos correctamente para que el boton se active y
+            ademas esperar la aprobacion de un administrador de la biblioteca
+          </p>
+
+          <p>Saludos de parte de la Protobiblioteca del CUAM</p>
+        </div>
+
         <Input
           placeholder={"Nombre del Documento"}
           label={"Nombre del Documento"}
@@ -104,6 +129,12 @@ const UploadForm = () => {
           max={date.getFullYear()}
           setValue={setValue}
           keyName={"year"}
+        />
+
+        <Category
+          label={"Categoría"}
+          setValue={setValue}
+          keyName={"category"}
         />
 
         <File label={"Archivo"} setValue={setValue} keyName={"file"} />
