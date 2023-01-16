@@ -7,6 +7,11 @@ import {
   getDocs,
   getFirestore,
   setDoc,
+  updateDoc,
+  query,
+  where,
+  addDoc,
+  deleteDoc,
 } from "firebase/firestore";
 import {
   getAuth,
@@ -16,7 +21,13 @@ import {
   browserLocalPersistence,
   setPersistence,
 } from "firebase/auth";
-import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import {
+  getStorage,
+  ref,
+  getDownloadURL,
+  uploadBytes,
+  deleteObject,
+} from "firebase/storage";
 import { v4 as uuid } from "uuid";
 
 const firebaseConfig = {
@@ -42,6 +53,7 @@ const FirebaseProvider = ({ children }) => {
   const [isLogin, setLogin] = useState(false);
   const [categories, setCategories] = useState([]);
   const [documents, setDocuments] = useState([]);
+  const [wRequests, setWRequests] = useState([]);
 
   // Methods
   const login = async (email, password) => {
@@ -133,10 +145,13 @@ const FirebaseProvider = ({ children }) => {
 
   const getFileName = async (filename) => {
     try {
-      const url = getDownloadURL(
+      const url = await getDownloadURL(
         ref(storage, `gs://${process.env.REACT_APP_STORAGE_BUCKET}/${filename}`)
       );
-      return url;
+      return {
+        ref: `gs://${process.env.REACT_APP_STORAGE_BUCKET}/${filename}`,
+        url,
+      };
     } catch (e) {
       console.error(e);
     }
@@ -152,6 +167,7 @@ const FirebaseProvider = ({ children }) => {
         ...data,
         keyId: uuid(),
         roles: ["any", "student", "archivist", "admin"],
+        owner: user.email,
       },
       status: "waiting",
     };
@@ -161,10 +177,68 @@ const FirebaseProvider = ({ children }) => {
   };
 
   const uploadFile = async (file) => {
-    console.log(file);
     const storageRef = ref(storage, `doc_${uuid()}${file.name}`);
     const snapshot = await uploadBytes(storageRef, file);
     return snapshot;
+  };
+
+  const getWaitingRequest = async () => {
+    const results = [];
+    const q = query(
+      collection(db, "requests"),
+      where("status", "==", "waiting")
+    );
+
+    const requestsSnapshot = await getDocs(q);
+    requestsSnapshot.forEach((doc) => results.push(doc.data()));
+    setWRequests(results);
+  };
+
+  const approveRequest = async (id) => {
+    try {
+      const reqRef = doc(db, "requests", id);
+      updateDoc(reqRef, {
+        status: "approved",
+      });
+
+      const q = query(collection(db, "requests"), where("requestId", "==", id));
+      const request = await getDocs(q);
+      const results = [];
+      request.forEach((doc) => results.push(doc.data()));
+      results.forEach(async (data) => {
+        const docRef = await addDoc(
+          collection(db, "documents"),
+          data.documentObject
+        );
+
+        if (docRef.id) {
+          console.log("Success", docRef.id);
+          getWaitingRequest();
+        }
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const deleteFileAndDocument = async (id) => {
+    try {
+      const q = query(collection(db, "documents"), where("keyId", "==", id));
+      const request = await getDocs(q);
+      const results = [];
+      request.forEach((doc) => results.push({ ...doc.data(), id: doc.id }));
+      results.forEach(async (data) => {
+        console.log(data);
+        const objectRef = ref(storage, data.fileRef);
+        const isDeleted = await deleteObject(objectRef);
+        console.log(isDeleted);
+
+        const docRef = await deleteDoc(doc(db, "documents", data.id));
+        console.log(docRef);
+      });
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // Render
@@ -184,6 +258,10 @@ const FirebaseProvider = ({ children }) => {
         documents,
         uploadFile,
         createNewRequest,
+        wRequests,
+        getWaitingRequest,
+        approveRequest,
+        deleteFileAndDocument,
       }}
     >
       {children}

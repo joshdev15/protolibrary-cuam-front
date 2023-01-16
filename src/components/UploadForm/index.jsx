@@ -29,27 +29,25 @@ const initialValue = {
 const UploadForm = () => {
   const [values, setValues] = useState(initialValue);
   const [isValid, setIsValid] = useState(false);
+  const [canSend, setCanSend] = useState(true);
   const { uploadFile, getFileName, createNewRequest } =
     useContext(FirebaseContext);
   const date = new Date();
 
   const onSubmit = async (e) => {
     e.preventDefault();
-
+    setCanSend(false);
     try {
-      console.log(e);
       const fileData = await uploadFile(values.file.value);
-      console.log(fileData);
-      const url = await getFileName(fileData.metadata.fullPath);
-      console.log(url);
+      const urls = await getFileName(fileData.metadata.fullPath);
       const data = {
         author: values.author.value,
-        name: values.author.value,
+        name: values.name.value,
         year: values.year.value,
         categoryId: values.category.value,
-        owner: user.email,
+        fileRef: urls.ref,
         isPublic: true,
-        url,
+        url: urls.url,
       };
 
       await createNewRequest(data);
@@ -57,12 +55,13 @@ const UploadForm = () => {
       setValues(initialValue);
     } catch (err) {
       console.log(err);
+    } finally {
+      setCanSend(true);
     }
   };
 
   const setValue = (value, key) => {
     const copy = { ...values };
-    console.log(copy, value, key);
     copy[key].value = value;
     if (["name", "author"].includes(key)) {
       copy[key].isValid = !["", " ", false].includes(value);

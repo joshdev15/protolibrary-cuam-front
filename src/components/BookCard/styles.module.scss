@@ -2,8 +2,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   cursor: pointer;
   border: 1px solid #2256a7;
   background-color: white;
@@ -11,6 +11,21 @@
   position: absolute;
   bottom: 5px;
   right: 5px;
+}
+
+.rm {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  border: 1px solid #2256a7;
+  background-color: white;
+  border-radius: 7px;
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
 }
 
 .card {
