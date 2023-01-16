@@ -6,18 +6,22 @@ import styles from "./styles.module.scss";
 
 const links = [
   {
+    key: "home",
     name: "Ir al Inicio",
     route: "/",
   },
   {
+    key: "upload",
     name: "Subir un nuevo documento",
     route: "/upload-file",
   },
   {
+    key: "requests",
     name: "Ver solicitudes de nuevo documentos",
     route: "/requests",
   },
   {
+    key: "users",
     name: "Promocion de usuario",
     route: "/user-roles",
   },
@@ -38,8 +42,12 @@ const ProfileModal = () => {
         <div className={styles.actionCont}>
           <h3 className={styles.actionTitle}>Acciones</h3>
 
-          {links.map(({ route, name }) => (
-            <p onClick={() => goToRoute(route)} className={styles.link}>
+          {links.map(({ route, name, key }) => (
+            <p
+              onClick={() => goToRoute(route)}
+              className={styles.link}
+              key={key}
+            >
               {name}
             </p>
           ))}

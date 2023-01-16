@@ -3,14 +3,13 @@ import { FirebaseContext } from "../../context/FirebaseContext";
 import styles from "./styles.module.scss";
 
 const CategoryBar = () => {
-  const { isLogin, getCategories, categories, firstLoad, getFileName } =
+  const { isLogin, getCategories, categories, firstLoad } =
     useContext(FirebaseContext);
 
   useEffect(() => {
     if (isLogin) {
       getCategories();
       firstLoad();
-      getFileName();
     }
   }, [isLogin]);
 

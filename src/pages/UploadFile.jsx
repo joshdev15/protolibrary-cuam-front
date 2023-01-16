@@ -3,6 +3,7 @@ import { FirebaseContext } from "context/FirebaseContext";
 import { useNavigate } from "react-router-dom";
 import HeaderWrapper from "components/HeaderWrapper";
 import Header from "components/Header";
+import UploadForm from "components/UploadForm";
 
 const UploadFile = () => {
   const { user } = useContext(FirebaseContext);
@@ -19,6 +20,7 @@ const UploadFile = () => {
       <HeaderWrapper>
         <Header title={"Subir Documento"} withSearchBar={false} />
       </HeaderWrapper>
+      <UploadForm />
     </>
   );
 };

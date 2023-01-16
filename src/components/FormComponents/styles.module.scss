@@ -1,0 +1,49 @@
+.label {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  span {
+    font-size: 10px;
+    font-weight: bold;
+    padding-bottom: 3px;
+  }
+}
+
+.input {
+  border: 1px solid #2256a7;
+  padding: 10px 20px;
+  border-radius: 0px 20px 0px 20px;
+  width: 300px;
+  font-size: 14px;
+}
+
+.fileLabel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  span {
+    font-size: 10px;
+    font-weight: bold;
+    padding-bottom: 3px;
+  }
+}
+
+.file {
+  display: none;
+}
+
+.pseudofile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  height: 100px;
+  border-radius: 0px 20px 0px 20px;
+  border: 1px dashed #2256a7;
+  font-size: 13px;
+  font-weight: bold;
+}

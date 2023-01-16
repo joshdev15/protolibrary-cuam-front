@@ -15,8 +15,8 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-// import { v4 as uuid } from "uuid";
+import { getStorage, ref, getDownloadURL, uploadBytes } from "firebase/storage";
+import { v4 as uuid } from "uuid";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_API_KEY,
@@ -89,10 +89,9 @@ const FirebaseProvider = ({ children }) => {
 
   const anonymousLogin = async () => {
     try {
-      console.log("Anonymous Login");
+      // console.log("Anonymous Login");
       const { user } = await signInAnonymously(auth);
       if (user?.uid) {
-        // setUser(user);
         setLogin(true);
         setAnonymous(true);
       }
@@ -131,17 +130,39 @@ const FirebaseProvider = ({ children }) => {
     }
   };
 
-  const getFileName = () => {
-    const files = ["gs://protolibrary-cuam.appspot.com/Documento Prueba-1.pdf"];
-    files.forEach((item) => {
-      getDownloadURL(ref(storage, item))
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    });
+  const getFileName = async (filename) => {
+    try {
+      const url = getDownloadURL(
+        ref(storage, `gs://${process.env.REACT_APP_STORAGE_BUCKET}/${filename}`)
+      );
+      return url;
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const createNewRequest = async (data) => {
+    const requestId = `req_${uuid()}`;
+    const requestData = {
+      requestId,
+      user: user.uid,
+      userEmail: user.email,
+      documentObject: {
+        ...data,
+        keyId: uuid(),
+        roles: ["any", "student", "archivist", "admin"],
+      },
+      status: "waiting",
+    };
+
+    await setDoc(doc(db, "requests", requestId), requestData);
+  };
+
+  const uploadFile = async (file) => {
+    console.log(file);
+    const storageRef = ref(storage, `doc_${uuid()}${file.name}`);
+    const snapshot = await uploadBytes(storageRef, file);
+    return snapshot;
   };
 
   // Render
@@ -159,6 +180,8 @@ const FirebaseProvider = ({ children }) => {
         getFileName,
         firstLoad,
         documents,
+        uploadFile,
+        createNewRequest,
       }}
     >
       {children}
