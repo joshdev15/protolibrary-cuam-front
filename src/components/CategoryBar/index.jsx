@@ -3,8 +3,13 @@ import { FirebaseContext } from "../../context/FirebaseContext";
 import styles from "./styles.module.scss";
 
 const CategoryBar = () => {
-  const { isLogin, getCategories, categories, firstLoad } =
-    useContext(FirebaseContext);
+  const {
+    isLogin,
+    getCategories,
+    categories,
+    firstLoad,
+    getDocumentsByCategory,
+  } = useContext(FirebaseContext);
 
   useEffect(() => {
     if (isLogin) {
@@ -17,7 +22,11 @@ const CategoryBar = () => {
     categories.length > 0 && (
       <div className={styles.bar}>
         {categories.map(({ name, id }) => (
-          <div className={styles.item} key={id}>
+          <div
+            className={styles.item}
+            key={id}
+            onClick={() => getDocumentsByCategory(id)}
+          >
             {name}
           </div>
         ))}

@@ -15,7 +15,7 @@ const links = [
     key: "upload",
     name: "Subir un nuevo documento",
     route: "/upload-file",
-    roles: ["student", "archivist"],
+    roles: ["student", "archivist", "admin"],
   },
   {
     key: "requests",

@@ -135,7 +135,32 @@ const FirebaseProvider = ({ children }) => {
       }
 
       const results = [];
-      const firstLoadItems = await getDocs(collection(db, "documents"));
+
+      const q = query(
+        collection(db, "documents"),
+        where("categoryId", "==", "cuam")
+      );
+      const firstLoadItems = await getDocs(q);
+      firstLoadItems.forEach((doc) => results.push(doc.data()));
+      setDocuments(results);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const getDocumentsByCategory = async (id) => {
+    try {
+      if (!isLogin) {
+        throw new Error("Your aren't authenticated");
+      }
+
+      const results = [];
+
+      const q = query(
+        collection(db, "documents"),
+        where("categoryId", "==", id)
+      );
+      const firstLoadItems = await getDocs(q);
       firstLoadItems.forEach((doc) => results.push(doc.data()));
       setDocuments(results);
     } catch (e) {
@@ -262,6 +287,7 @@ const FirebaseProvider = ({ children }) => {
         getWaitingRequest,
         approveRequest,
         deleteFileAndDocument,
+        getDocumentsByCategory,
       }}
     >
       {children}

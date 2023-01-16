@@ -35,6 +35,7 @@ const UploadForm = () => {
   const date = new Date();
 
   const onSubmit = async (e) => {
+    console.log("procesando");
     e.preventDefault();
     setCanSend(false);
     try {
@@ -136,9 +137,15 @@ const UploadForm = () => {
           keyName={"category"}
         />
 
-        <File label={"Archivo"} setValue={setValue} keyName={"file"} />
+        {canSend && (
+          <File label={"Archivo"} setValue={setValue} keyName={"file"} />
+        )}
 
-        <input type="submit" value={"Solicitar carga"} disabled={!isValid} />
+        {canSend && (
+          <input type="submit" value={"Solicitar carga"} disabled={!isValid} />
+        )}
+
+        {!canSend && <h3>Subiendo Solicitud</h3>}
       </form>
     </div>
   );
