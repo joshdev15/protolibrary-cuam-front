@@ -27,6 +27,7 @@ import {
   uploadBytes,
   deleteObject,
 } from "firebase/storage";
+import { NotificationManager } from "react-notifications";
 import { v4 as uuid } from "uuid";
 
 const firebaseConfig = {
@@ -67,9 +68,11 @@ const FirebaseProvider = ({ children }) => {
           setLogin(true);
           setUser(docSnap.data());
           setAnonymous(false);
+          notificate("success", "Ha iniciado sesión", "Inicio completo");
         }
       }
     } catch (e) {
+      notificate("error", "Error al iniciar sesión", "No se pudo iniciar");
       console.error(e);
     }
   };
@@ -93,10 +96,11 @@ const FirebaseProvider = ({ children }) => {
         };
 
         await setDoc(doc(db, "users", user.uid), appUser);
-        // console.log(resp);
+        notificate("success", "Usuario registrado", "Registro completo");
         login(email, password);
       }
     } catch (e) {
+      notificate("error", "Error al registrar", "Verifique los datos");
       console.error(e);
     }
   };
@@ -104,7 +108,6 @@ const FirebaseProvider = ({ children }) => {
   const verifyLogin = async () => {
     const currentUserToken = localStorage.getItem("token");
     try {
-      console.log("currentToken", currentUserToken);
       if (currentUserToken === null) {
         throw new Error("not local user");
       }
@@ -115,6 +118,7 @@ const FirebaseProvider = ({ children }) => {
         setLogin(true);
         setUser(docSnap.data());
         setAnonymous(false);
+        notificate("success", "Ha iniciado sesión", "Inicio completo");
       }
     } catch (e) {
       anonymousLogin();
@@ -130,6 +134,7 @@ const FirebaseProvider = ({ children }) => {
         setAnonymous(true);
       }
     } catch (e) {
+      notificate("error", "Error de inicio anonimo", "Error en inicio");
       console.error(e);
     }
   };
@@ -144,6 +149,11 @@ const FirebaseProvider = ({ children }) => {
       await anonymousLogin();
       firstLoad();
     } catch (e) {
+      notificate(
+        "error",
+        "Error al cerrar sesión",
+        "Error en cierre de sesión"
+      );
       console.log(e);
     }
   };
@@ -218,22 +228,31 @@ const FirebaseProvider = ({ children }) => {
   };
 
   const createNewRequest = async (data) => {
-    const requestId = `req_${uuid()}`;
-    const requestData = {
-      requestId,
-      user: user.uid,
-      userEmail: user.email,
-      documentObject: {
-        ...data,
-        keyId: uuid(),
-        roles: ["any", "student", "archivist", "admin"],
-        owner: user.email,
-      },
-      status: "waiting",
-    };
+    try {
+      const requestId = `req_${uuid()}`;
+      const requestData = {
+        requestId,
+        user: user.uid,
+        userEmail: user.email,
+        documentObject: {
+          ...data,
+          keyId: uuid(),
+          roles: ["any", "student", "archivist", "admin"],
+          owner: user.email,
+        },
+        status: "waiting",
+      };
 
-    const request = await setDoc(doc(db, "requests", requestId), requestData);
-    return request;
+      const request = await setDoc(doc(db, "requests", requestId), requestData);
+      notificate("success", "Solicitud creada");
+      return request;
+    } catch (e) {
+      notificate(
+        "error",
+        "Error al cerrar sesión",
+        "Error en cierre de sesión"
+      );
+    }
   };
 
   const uploadFile = async (file) => {
@@ -243,15 +262,20 @@ const FirebaseProvider = ({ children }) => {
   };
 
   const getWaitingRequest = async () => {
-    const results = [];
-    const q = query(
-      collection(db, "requests"),
-      where("status", "==", "waiting")
-    );
+    try {
+      const results = [];
+      const q = query(
+        collection(db, "requests"),
+        where("status", "==", "waiting")
+      );
 
-    const requestsSnapshot = await getDocs(q);
-    requestsSnapshot.forEach((doc) => results.push(doc.data()));
-    setWRequests(results);
+      const requestsSnapshot = await getDocs(q);
+      requestsSnapshot.forEach((doc) => results.push(doc.data()));
+      notificate("success", "lista actualizada");
+      setWRequests(results);
+    } catch (e) {
+      notificate("error", "Error al obtener la lista");
+    }
   };
 
   const approveRequest = async (id) => {
@@ -272,11 +296,12 @@ const FirebaseProvider = ({ children }) => {
         );
 
         if (docRef.id) {
-          console.log("Success", docRef.id);
+          notificate("success", "Solicitud aprobada");
           getWaitingRequest();
         }
       });
     } catch (err) {
+      notificate("error", "Error en la aprovacion de la solicitud");
       console.error(err);
     }
   };
@@ -288,15 +313,14 @@ const FirebaseProvider = ({ children }) => {
       const results = [];
       request.forEach((doc) => results.push({ ...doc.data(), id: doc.id }));
       results.forEach(async (data) => {
-        console.log(data);
         const objectRef = ref(storage, data.fileRef);
-        const isDeleted = await deleteObject(objectRef);
-        console.log(isDeleted);
-
-        const docRef = await deleteDoc(doc(db, "documents", data.id));
-        console.log(docRef);
+        await deleteObject(objectRef);
+        await deleteDoc(doc(db, "documents", data.id));
+        firstLoad();
+        notificate("success", "Documento eliminado");
       });
     } catch (err) {
+      notificate("error", "Error en la eliminacion del documento");
       console.error(err);
     }
   };
@@ -312,13 +336,35 @@ const FirebaseProvider = ({ children }) => {
       files.forEach((doc) => {
         const data = doc.data();
 
-        if (data.name.includes(value)) {
+        if (data.name.toLowerCase().includes(value.toLowerCase())) {
           results.push(doc.data());
         }
       });
+
+      if (results.length === 0) {
+        notificate("info", "No se encontro ningún documento");
+      }
+
       setDocuments(results);
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const notificate = (type, title, msg) => {
+    switch (type) {
+      case "info":
+        NotificationManager.info(msg, title);
+        break;
+      case "success":
+        NotificationManager.success(msg, title);
+        break;
+      case "warning":
+        NotificationManager.warning(msg, title);
+        break;
+      case "error":
+        NotificationManager.error(msg, title);
+        break;
     }
   };
 
