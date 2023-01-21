@@ -9,7 +9,6 @@ const Home = () => {
   const { verifyLogin, isLogin } = useContext(FirebaseContext);
 
   useEffect(() => {
-    console.log(isLogin);
     if (!isLogin) {
       verifyLogin();
     }

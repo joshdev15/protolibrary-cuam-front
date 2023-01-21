@@ -31,7 +31,7 @@ const BookCard = ({ item }) => {
           </div>
 
           {user !== undefined &&
-            ["archivist", "admin"].includes(user?.role) &&
+            ["admin"].includes(user?.role) &&
             owner !== "CUAM" && (
               <div
                 className={styles.rm}

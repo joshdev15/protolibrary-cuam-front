@@ -1,6 +1,8 @@
 import { useContext, useState, useEffect } from "react";
 import { FirebaseContext } from "context/FirebaseContext";
 import { Input, File, Category } from "components/FormComponents";
+import LottiePlayer from "components/Lottie";
+import Loader from "assets/loader.json";
 import styles from "./styles.module.scss";
 
 const initialValue = {
@@ -145,7 +147,7 @@ const UploadForm = () => {
           <input type="submit" value={"Solicitar carga"} disabled={!isValid} />
         )}
 
-        {!canSend && <h3>Subiendo Solicitud</h3>}
+        {!canSend && <LottiePlayer src={Loader} width={100} height={100} />}
       </form>
     </div>
   );

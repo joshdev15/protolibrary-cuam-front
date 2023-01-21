@@ -18,9 +18,6 @@ import {
   signInAnonymously,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  browserSessionPersistence,
-  browserLocalPersistence,
-  setPersistence,
   signOut,
 } from "firebase/auth";
 import {
@@ -304,6 +301,27 @@ const FirebaseProvider = ({ children }) => {
     }
   };
 
+  const searchFiles = async (value) => {
+    try {
+      if (!isLogin) {
+        throw new Error("Your aren't authenticated");
+      }
+
+      const results = [];
+      const files = await getDocs(collection(db, "documents"));
+      files.forEach((doc) => {
+        const data = doc.data();
+
+        if (data.name.includes(value)) {
+          results.push(doc.data());
+        }
+      });
+      setDocuments(results);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   // Render
   return (
     <FirebaseContext.Provider
@@ -328,6 +346,7 @@ const FirebaseProvider = ({ children }) => {
         getDocumentsByCategory,
         verifyLogin,
         logout,
+        searchFiles,
       }}
     >
       {children}
