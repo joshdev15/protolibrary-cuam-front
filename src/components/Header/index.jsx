@@ -10,16 +10,16 @@ import styles from "./styles.module.scss";
 
 const Header = ({ title, withSearchBar }) => {
   const { user } = useContext(FirebaseContext);
-  const [activeL, setLActive] = useState(false);
-  const [activeP, setPActive] = useState(false);
+  const [loginSt, setLoginSt] = useState(false);
+  const [profileSt, setProfileSt] = useState(false);
   const closeModal = () => {
-    setLActive(false);
-    setPActive(false);
+    setLoginSt(false);
+    setProfileSt(false);
   };
 
   useEffect(() => {
     if (user !== undefined) {
-      setLActive(false);
+      setLoginSt(false);
     }
   }, [user]);
 
@@ -27,14 +27,14 @@ const Header = ({ title, withSearchBar }) => {
     <>
       {user === undefined ? (
         <Modal
-          isActive={activeL}
-          title={"Inicio o Registro"}
+          isActive={loginSt}
+          title={"Inicio de Sesion"}
           onClose={closeModal}
         >
-          <LoginSection />
+          <LoginSection mode={"login"} />
         </Modal>
       ) : (
-        <Modal isActive={activeP} title={"Perfil"} onClose={closeModal}>
+        <Modal isActive={profileSt} title={"Perfil"} onClose={closeModal}>
           <ProfileModal />
         </Modal>
       )}
@@ -45,11 +45,11 @@ const Header = ({ title, withSearchBar }) => {
             <span className={styles.title}>{title}</span>
 
             {user === undefined ? (
-              <div onClick={() => setLActive(true)} className={styles.label}>
-                Inicio | Registro
+              <div onClick={() => setLoginSt(true)} className={styles.label}>
+                Inicio de Sesion
               </div>
             ) : (
-              <div onClick={() => setPActive(true)} className={styles.label}>
+              <div onClick={() => setProfileSt(true)} className={styles.label}>
                 {getRoleName(user?.role)}
               </div>
             )}

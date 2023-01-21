@@ -1,58 +1,53 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
+import PropTypes from "prop-types";
 import { FirebaseContext } from "context/FirebaseContext";
 // import GButton from "assets/gbutton.svg";
+import { Input } from "components/FormComponents";
 import styles from "./styles.module.scss";
 
-const LoginSection = () => {
+const LoginSection = ({ mode }) => {
   const { login, signUp } = useContext(FirebaseContext);
-  const [mode, setMode] = useState("login");
   const [mail, setMail] = useState();
   const [pass, setPass] = useState();
 
   const submit = (e) => {
     e.preventDefault();
+    if (mode === undefined) {
+      return;
+    }
+
     if (mode === "login") {
       login(mail, pass);
-    } else {
+      return;
+    }
+
+    if (mode === "signup") {
       signUp(mail, pass);
+      return;
     }
   };
 
   return (
     <div className={styles.login}>
-      <div className={styles.selector}>
-        <div
-          className={mode === "login" ? styles.active : styles.inactive}
-          onClick={() => setMode("login")}
-        >
-          Inicio
-        </div>
-        <div
-          className={mode === "signup" ? styles.active : styles.inactive}
-          onClick={() => setMode("signup")}
-        >
-          Registro
-        </div>
-      </div>
-
       <form className={styles.form} onSubmit={submit}>
-        <input
+        <Input
           type="text"
-          className={styles.input}
+          label={"Correo"}
           placeholder="Correo"
           onChange={(e) => setMail(e.target.value)}
         />
-        <input
+        <Input
           type="password"
-          className={styles.input}
+          label={"Contraseña"}
           placeholder="Contraseña"
           onChange={(e) => setPass(e.target.value)}
         />
-        <input
+        <Input
           type="submit"
           className={styles.input}
           value={mode === "login" ? "Iniciar" : "Registrarse"}
         />
+
         {/*
         <button type="submit" className={styles.google}>
           <img src={GButton} alt={"google button"} width={20} height={20} />
@@ -62,6 +57,10 @@ const LoginSection = () => {
       </form>
     </div>
   );
+};
+
+LoginSection.propTypes = {
+  mode: PropTypes.string,
 };
 
 export default LoginSection;
