@@ -3,6 +3,7 @@ import Home from "./Home";
 import UploadFile from "./UploadFile";
 import UploadRequest from "./UploadRequest";
 import UserRoles from "./UserRoles";
+import UserResgistration from "./UserRegistration";
 import Error404 from "./Error404";
 
 const router = createBrowserRouter([
@@ -24,6 +25,11 @@ const router = createBrowserRouter([
   {
     path: "/user-roles",
     element: <UserRoles />,
+    errorElement: <Error404 />,
+  },
+  {
+    path: "/user-registration",
+    element: <UserResgistration />,
     errorElement: <Error404 />,
   },
 ]);

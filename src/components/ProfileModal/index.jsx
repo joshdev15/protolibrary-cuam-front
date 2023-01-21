@@ -12,6 +12,18 @@ const links = [
     roles: ["student", "archivist", "admin"],
   },
   {
+    key: "users-registration",
+    name: "Registro de usuario",
+    route: "/user-registration",
+    roles: ["archivist", "admin"],
+  },
+  {
+    key: "users-roles",
+    name: "Promoción de usuario",
+    route: "/user-roles",
+    roles: ["admin"],
+  },
+  {
     key: "upload",
     name: "Subir un nuevo documento",
     route: "/upload-file",
@@ -19,21 +31,15 @@ const links = [
   },
   {
     key: "requests",
-    name: "Ver solicitudes de nuevo documentos",
+    name: "Solicitudes de nuevos documentos",
     route: "/requests",
     roles: ["archivist", "admin"],
-  },
-  {
-    key: "users",
-    name: "Promocion de usuario",
-    route: "/user-roles",
-    roles: ["admin"],
   },
 ];
 
 const ProfileModal = () => {
-  const { user } = useContext(FirebaseContext);
   const navigate = useNavigate();
+  const { user, logout } = useContext(FirebaseContext);
   const goToRoute = (value) => navigate(value);
 
   return (
@@ -59,6 +65,10 @@ const ProfileModal = () => {
               )
           )}
         </div>
+
+        <strong className={styles.signout} onClick={logout}>
+          Cerrar Sesión
+        </strong>
       </div>
 
       <div className={styles.right}>

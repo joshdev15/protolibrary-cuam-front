@@ -18,8 +18,10 @@ import {
   signInAnonymously,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
+  browserSessionPersistence,
   browserLocalPersistence,
   setPersistence,
+  signOut,
 } from "firebase/auth";
 import {
   getStorage,
@@ -59,12 +61,13 @@ const FirebaseProvider = ({ children }) => {
   const login = async (email, password) => {
     console.log("Login");
     try {
-      await setPersistence(auth, browserLocalPersistence);
       const { user } = await signInWithEmailAndPassword(auth, email, password);
       if (user?.uid) {
+        localStorage.setItem("token", user.uid);
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
+          setLogin(true);
           setUser(docSnap.data());
           setAnonymous(false);
         }
@@ -101,15 +104,50 @@ const FirebaseProvider = ({ children }) => {
     }
   };
 
+  const verifyLogin = async () => {
+    const currentUserToken = localStorage.getItem("token");
+    try {
+      console.log("currentToken", currentUserToken);
+      if (currentUserToken === null) {
+        throw new Error("not local user");
+      }
+
+      const docRef = doc(db, "users", currentUserToken);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setLogin(true);
+        setUser(docSnap.data());
+        setAnonymous(false);
+      }
+    } catch (e) {
+      anonymousLogin();
+    }
+  };
+
   const anonymousLogin = async () => {
     try {
       const { user } = await signInAnonymously(auth);
       if (user?.uid) {
+        setUser();
         setLogin(true);
         setAnonymous(true);
       }
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const logout = async () => {
+    try {
+      await signOut(auth);
+      localStorage.removeItem("token");
+      setLogin(true);
+      setUser();
+      setAnonymous(false);
+      await anonymousLogin();
+      firstLoad();
+    } catch (e) {
+      console.log(e);
     }
   };
 
@@ -288,6 +326,8 @@ const FirebaseProvider = ({ children }) => {
         approveRequest,
         deleteFileAndDocument,
         getDocumentsByCategory,
+        verifyLogin,
+        logout,
       }}
     >
       {children}

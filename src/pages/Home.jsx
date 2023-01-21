@@ -6,10 +6,13 @@ import CategoryBar from "components/CategoryBar";
 import SearchResult from "components/SearchResult";
 
 const Home = () => {
-  const { anonymousLogin } = useContext(FirebaseContext);
+  const { verifyLogin, isLogin } = useContext(FirebaseContext);
 
   useEffect(() => {
-    anonymousLogin();
+    console.log(isLogin);
+    if (!isLogin) {
+      verifyLogin();
+    }
   }, []);
 
   return (
