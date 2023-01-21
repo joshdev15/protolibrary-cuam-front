@@ -54,6 +54,7 @@ const FirebaseProvider = ({ children }) => {
   const [categories, setCategories] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [wRequests, setWRequests] = useState([]);
+  const [users, setUsers] = useState([]);
 
   // Methods
   const login = async (email, password) => {
@@ -341,6 +342,45 @@ const FirebaseProvider = ({ children }) => {
     }
   };
 
+  const getUserByEmail = async (value) => {
+    try {
+      if (!isLogin) {
+        throw new Error("Your aren't authenticated");
+      }
+
+      console.log(value);
+      const results = [];
+      const q = query(collection(db, "users"), where("email", "==", value));
+      const users = await getDocs(q);
+      users.forEach((doc) => results.push(doc.data()));
+      if (results?.length === 0) {
+        notificate("warn", "Usuario no encontrado");
+      }
+
+      setUsers(results);
+    } catch (e) {
+      notificate("error", "Error al buscar el usuario");
+      console.error(e);
+    }
+  };
+
+  const updateRole = async (uid, value) => {
+    try {
+      if (!isLogin) {
+        throw new Error("Your aren't authenticated");
+      }
+
+      const userRef = doc(db, "users", uid);
+      await updateDoc(userRef, {
+        role: value,
+      });
+      notificate("success", "Rol actualizado");
+    } catch (e) {
+      notificate("error", "Error al buscar el usuario");
+      console.error(e);
+    }
+  };
+
   const notificate = (type, title, msg) => {
     switch (type) {
       case "info":
@@ -383,6 +423,9 @@ const FirebaseProvider = ({ children }) => {
         verifyLogin,
         logout,
         searchFiles,
+        users,
+        getUserByEmail,
+        updateRole,
       }}
     >
       {children}

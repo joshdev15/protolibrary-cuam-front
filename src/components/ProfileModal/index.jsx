@@ -19,7 +19,7 @@ const links = [
   },
   {
     key: "users-roles",
-    name: "Promoción de usuario",
+    name: "Gestión de Roles de Usuario",
     route: "/user-roles",
     roles: ["admin"],
   },
