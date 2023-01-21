@@ -57,7 +57,6 @@ const FirebaseProvider = ({ children }) => {
 
   // Methods
   const login = async (email, password) => {
-    console.log("Login");
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
       if (user?.uid) {
@@ -78,7 +77,6 @@ const FirebaseProvider = ({ children }) => {
   };
 
   const signUp = async (email, password) => {
-    console.log("Register");
     try {
       const response = await createUserWithEmailAndPassword(
         auth,
@@ -148,12 +146,9 @@ const FirebaseProvider = ({ children }) => {
       setAnonymous(false);
       await anonymousLogin();
       firstLoad();
+      notificate("info", "Sesión Cerrada");
     } catch (e) {
-      notificate(
-        "error",
-        "Error al cerrar sesión",
-        "Error en cierre de sesión"
-      );
+      notificate("error", "Error al cerrar sesión");
       console.log(e);
     }
   };
@@ -180,7 +175,6 @@ const FirebaseProvider = ({ children }) => {
       }
 
       const results = [];
-
       const q = query(
         collection(db, "documents"),
         where("categoryId", "==", "cuam")
@@ -247,11 +241,7 @@ const FirebaseProvider = ({ children }) => {
       notificate("success", "Solicitud creada");
       return request;
     } catch (e) {
-      notificate(
-        "error",
-        "Error al cerrar sesión",
-        "Error en cierre de sesión"
-      );
+      notificate("error", "Error al cerrar sesión");
     }
   };
 
@@ -271,7 +261,7 @@ const FirebaseProvider = ({ children }) => {
 
       const requestsSnapshot = await getDocs(q);
       requestsSnapshot.forEach((doc) => results.push(doc.data()));
-      notificate("success", "lista actualizada");
+      notificate("success", "Lista actualizada");
       setWRequests(results);
     } catch (e) {
       notificate("error", "Error al obtener la lista");
@@ -301,7 +291,7 @@ const FirebaseProvider = ({ children }) => {
         }
       });
     } catch (err) {
-      notificate("error", "Error en la aprovacion de la solicitud");
+      notificate("error", "Error en la aprobación de la solicitud");
       console.error(err);
     }
   };
