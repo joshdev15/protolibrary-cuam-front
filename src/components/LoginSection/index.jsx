@@ -1,7 +1,6 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import PropTypes from "prop-types";
 import { FirebaseContext } from "context/FirebaseContext";
-// import GButton from "assets/gbutton.svg";
 import { Input } from "components/FormComponents";
 import styles from "./styles.module.scss";
 
@@ -47,13 +46,6 @@ const LoginSection = ({ mode }) => {
           className={styles.input}
           value={mode === "login" ? "Iniciar" : "Registrarse"}
         />
-
-        {/*
-        <button type="submit" className={styles.google}>
-          <img src={GButton} alt={"google button"} width={20} height={20} />
-          {`${mode === "login" ? "Iniciar" : "Registrarse"} con Google`}
-        </button>
-        */}
       </form>
     </div>
   );

@@ -10,7 +10,8 @@ const UploadFile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (user === undefined) {
+    console.log(["archivist", "admin"].includes(user?.role));
+    if (!["archivist", "admin"].includes(user?.role)) {
       navigate("/");
     }
   }, [user]);

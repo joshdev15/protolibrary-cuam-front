@@ -96,7 +96,6 @@ const FirebaseProvider = ({ children }) => {
 
         await setDoc(doc(db, "users", user.uid), appUser);
         notificate("success", "Usuario registrado", "Registro completo");
-        login(email, password);
       }
     } catch (e) {
       notificate("error", "Error al registrar", "Verifique los datos");
@@ -381,6 +380,33 @@ const FirebaseProvider = ({ children }) => {
     }
   };
 
+  const addCategory = async (name) => {
+    const categoryNames = categories.map((cat) => cat.name.toLowerCase());
+    try {
+      if (categoryNames.includes(name)) {
+        throw new Error("La categoria ya existe");
+      }
+
+      if (["", " ", false].includes(name)) {
+        throw new Error("El nombre no puede estar vacío");
+      }
+
+      if (name.length < 3) {
+        throw new Error("El nombre debe tener mas de 3 caracteres");
+      }
+
+      await addDoc(collection(db, "categories"), {
+        name,
+        id: uuid(),
+        inerasable: false,
+      });
+      notificate("success", "Categoría agregada");
+      getCategories();
+    } catch (e) {
+      notificate("error", e.message);
+    }
+  };
+
   const notificate = (type, title, msg) => {
     switch (type) {
       case "info":
@@ -426,6 +452,7 @@ const FirebaseProvider = ({ children }) => {
         users,
         getUserByEmail,
         updateRole,
+        addCategory,
       }}
     >
       {children}

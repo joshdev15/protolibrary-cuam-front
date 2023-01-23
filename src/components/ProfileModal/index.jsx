@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FirebaseContext } from "context/FirebaseContext";
 import { getRoleName } from "utils/functions";
@@ -35,6 +35,12 @@ const links = [
     route: "/requests",
     roles: ["archivist", "admin"],
   },
+  {
+    key: "categories",
+    name: "Creación de nueva categoría",
+    route: "/categories",
+    roles: ["archivist", "admin"],
+  },
 ];
 
 const ProfileModal = () => {
@@ -69,10 +75,6 @@ const ProfileModal = () => {
         <strong className={styles.signout} onClick={logout}>
           Cerrar Sesión
         </strong>
-      </div>
-
-      <div className={styles.right}>
-        <div>Aun no ha realizado ninguna acción</div>
       </div>
     </div>
   );
