@@ -6,8 +6,12 @@ import Header from "components/Header";
 import UploadForm from "components/UploadForm";
 
 const UploadFile = () => {
-  const { user } = useContext(FirebaseContext);
+  const { user, getCategories } = useContext(FirebaseContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   useEffect(() => {
     if (user === undefined) {

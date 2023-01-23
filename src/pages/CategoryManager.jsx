@@ -15,7 +15,6 @@ const CategoryManager = () => {
   }, []);
 
   useEffect(() => {
-    console.log(["archivist", "admin"].includes(user?.role));
     if (!["archivist", "admin"].includes(user?.role)) {
       navigate("/");
     }

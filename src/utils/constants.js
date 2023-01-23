@@ -39,6 +39,6 @@ export const links = [
     key: "categories",
     name: "Creación de nueva categoría",
     route: "/categories",
-    roles: ["archivist", "admin"],
+    roles: ["admin"],
   },
 ];

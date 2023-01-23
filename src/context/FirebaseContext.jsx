@@ -49,12 +49,13 @@ const storage = getStorage(app);
 const FirebaseProvider = ({ children }) => {
   // Declarations
   const [user, setUser] = useState();
-  const [isAnonymous, setAnonymous] = useState(false);
+  const [isAnonymous, setAnonymous] = useState();
   const [isLogin, setLogin] = useState(false);
   const [categories, setCategories] = useState([]);
   const [documents, setDocuments] = useState([]);
   const [wRequests, setWRequests] = useState([]);
   const [users, setUsers] = useState([]);
+  const [privateF, setPrivate] = useState([]);
 
   // Methods
   const login = async (email, password) => {
@@ -347,7 +348,6 @@ const FirebaseProvider = ({ children }) => {
         throw new Error("Your aren't authenticated");
       }
 
-      console.log(value);
       const results = [];
       const q = query(collection(db, "users"), where("email", "==", value));
       const users = await getDocs(q);
@@ -407,6 +407,50 @@ const FirebaseProvider = ({ children }) => {
     }
   };
 
+  const getPrivateFiles = async () => {
+    try {
+      if (!isLogin && isAnonymous == true) {
+        throw new Error("Your aren't authenticated");
+      }
+
+      const q = query(
+        collection(db, "privatefiles"),
+        where("userEmail", "==", user?.email)
+      );
+      const results = [];
+      const privateFiles = await getDocs(q);
+      privateFiles.forEach((doc) => results.push(doc.data()));
+      setPrivate(results);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const setPrivateFiles = async (file, name) => {
+    try {
+      if ([undefined, false, ""].includes(file)) {
+        throw new Error("Archivo Invalido");
+      }
+
+      const fileData = await uploadFile(file);
+      const fileRef = await getFileName(fileData.metadata.fullPath);
+      addDoc(collection(db, "privatefiles"), {
+        type: "private",
+        userEmail: user?.email,
+        name: `${user?.email}-${name}`,
+        url: fileRef.url,
+        ref: fileRef.ref,
+        is: name,
+      });
+
+      getPrivateFiles();
+      notificate("success", "Documento cargado");
+    } catch (err) {
+      notificate("error", "Error en la carga de documento personal");
+      console.error(err);
+    }
+  };
+
   const notificate = (type, title, msg) => {
     switch (type) {
       case "info":
@@ -453,6 +497,9 @@ const FirebaseProvider = ({ children }) => {
         getUserByEmail,
         updateRole,
         addCategory,
+        getPrivateFiles,
+        setPrivateFiles,
+        privateF,
       }}
     >
       {children}
