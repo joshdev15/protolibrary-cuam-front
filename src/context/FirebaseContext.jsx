@@ -298,6 +298,21 @@ const FirebaseProvider = ({ children }) => {
     }
   };
 
+  const rejectRequest = async (id) => {
+    try {
+      const reqRef = doc(db, "requests", id);
+      updateDoc(reqRef, {
+        status: "rejected",
+      });
+
+      getWaitingRequest();
+      notificate("success", "La solicitud ha sido rechazada");
+    } catch (err) {
+      notificate("error", "Error en la rechazando la solicitud");
+      console.error(err);
+    }
+  };
+
   const deleteFileAndDocument = async (id) => {
     try {
       const q = query(collection(db, "documents"), where("keyId", "==", id));
@@ -555,6 +570,7 @@ const FirebaseProvider = ({ children }) => {
         searchPrivateFiles,
         privateDocs,
         deletePrivFileAndDocument,
+        rejectRequest,
       }}
     >
       {children}

@@ -3,11 +3,12 @@ import { FirebaseContext } from "context/FirebaseContext";
 import DownloadImage from "assets/down.png";
 import ReloadImage from "assets/reload.png";
 import CheckImage from "assets/check.png";
+import TrashImage from "assets/trash.png";
 import { Tooltip } from "react-tooltip";
 import styles from "./styles.module.scss";
 
 const UploadList = () => {
-  const { user, getWaitingRequest, wRequests, approveRequest } =
+  const { user, getWaitingRequest, wRequests, approveRequest, rejectRequest } =
     useContext(FirebaseContext);
 
   const downloadFile = (url) => {
@@ -118,6 +119,23 @@ const UploadList = () => {
                         id={`approve${requestId}`}
                         className={styles.down}
                         src={CheckImage}
+                        alt={"Download"}
+                        width={20}
+                        height={20}
+                      />
+                    </div>
+                  )}
+
+                  {["admin"].includes(user.role) && (
+                    <div onClick={() => rejectRequest(requestId)}>
+                      <Tooltip anchorId={`reject${requestId}`}>
+                        Rechazar
+                      </Tooltip>
+
+                      <img
+                        id={`reject${requestId}`}
+                        className={styles.down}
+                        src={TrashImage}
                         alt={"Download"}
                         width={20}
                         height={20}
