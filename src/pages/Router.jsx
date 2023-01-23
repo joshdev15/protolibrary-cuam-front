@@ -6,6 +6,7 @@ import UserRoles from "./UserRoles";
 import UserResgistration from "./UserRegistration";
 import CategoryManager from "./CategoryManager";
 import MyFiles from "./MyFiles";
+import StudentsFiles from "./StudentsFiles";
 import Error404 from "./Error404";
 
 const router = createBrowserRouter([
@@ -42,6 +43,11 @@ const router = createBrowserRouter([
   {
     path: "/myfiles",
     element: <MyFiles />,
+    errorElement: <Error404 />,
+  },
+  {
+    path: "/students-files",
+    element: <StudentsFiles />,
     errorElement: <Error404 />,
   },
 ]);

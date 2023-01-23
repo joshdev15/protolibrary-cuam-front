@@ -56,6 +56,7 @@ const FirebaseProvider = ({ children }) => {
   const [wRequests, setWRequests] = useState([]);
   const [users, setUsers] = useState([]);
   const [privateF, setPrivate] = useState([]);
+  const [privateDocs, setPrivDocuments] = useState([]);
 
   // Methods
   const login = async (email, password) => {
@@ -441,12 +442,63 @@ const FirebaseProvider = ({ children }) => {
         url: fileRef.url,
         ref: fileRef.ref,
         is: name,
+        keyId: uuid(),
+        roles: ["any", "student", "archivist", "admin"],
+        owner: user.email,
+        author: user.email,
+        year: `${new Date().getFullYear()}`,
       });
 
       getPrivateFiles();
       notificate("success", "Documento cargado");
     } catch (err) {
       notificate("error", "Error en la carga de documento personal");
+      console.error(err);
+    }
+  };
+
+  const searchPrivateFiles = async (value) => {
+    try {
+      if (!isLogin) {
+        throw new Error("Your aren't authenticated");
+      }
+
+      const results = [];
+      const files = await getDocs(collection(db, "privatefiles"));
+      files.forEach((doc) => {
+        const data = doc.data();
+
+        if (data.name.toLowerCase().includes(value.toLowerCase())) {
+          results.push(doc.data());
+        }
+      });
+
+      if (results.length === 0) {
+        notificate("info", "No se encontro ningún documento");
+      }
+
+      setPrivDocuments(results);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const deletePrivFileAndDocument = async (id) => {
+    try {
+      const q = query(collection(db, "privatefiles"), where("keyId", "==", id));
+      const request = await getDocs(q);
+      const results = [];
+      request.forEach((doc) => results.push({ ...doc.data(), id: doc.id }));
+      results.forEach(async (data) => {
+        const objectRef = ref(storage, data.ref);
+        console.log(objectRef);
+        await deleteObject(objectRef);
+        await deleteDoc(doc(db, "privatefiles", data.id));
+        setPrivDocuments([]);
+        notificate("success", "Documento eliminado");
+      });
+    } catch (err) {
+      notificate("error", "Error en la eliminacion del documento");
       console.error(err);
     }
   };
@@ -500,6 +552,9 @@ const FirebaseProvider = ({ children }) => {
         getPrivateFiles,
         setPrivateFiles,
         privateF,
+        searchPrivateFiles,
+        privateDocs,
+        deletePrivFileAndDocument,
       }}
     >
       {children}

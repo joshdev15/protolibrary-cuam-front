@@ -7,12 +7,21 @@ import CloseImage from "assets/close.png";
 import { Tooltip } from "react-tooltip";
 import styles from "./styles.module.scss";
 
-const BookCard = ({ item }) => {
-  const { user, deleteFileAndDocument } = useContext(FirebaseContext);
+const BookCard = ({ item, privated }) => {
+  const { user, deleteFileAndDocument, deletePrivFileAndDocument } =
+    useContext(FirebaseContext);
   const { name, author, image, url, year, keyId, owner } = item;
 
   const downloadFile = () => {
     window.open(url);
+  };
+
+  const deleting = (keyId) => {
+    if (!privated) {
+      deleteFileAndDocument(keyId);
+    } else {
+      deletePrivFileAndDocument(keyId);
+    }
   };
 
   return (
@@ -33,10 +42,7 @@ const BookCard = ({ item }) => {
           {user !== undefined &&
             ["admin"].includes(user?.role) &&
             owner !== "CUAM" && (
-              <div
-                className={styles.rm}
-                onClick={() => deleteFileAndDocument(keyId)}
-              >
+              <div className={styles.rm} onClick={() => deleting(keyId)}>
                 <Tooltip anchorId={`rm${keyId}`}>Eliminar</Tooltip>
                 <img
                   id={`rm${keyId}`}
@@ -73,6 +79,7 @@ BookCard.propTypes = {
     roles: PropTypes.arrayOf(PropTypes.string),
     isPublic: PropTypes.bool,
   }),
+  private: PropTypes.bool,
 };
 
 export default BookCard;

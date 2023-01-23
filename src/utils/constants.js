@@ -41,4 +41,10 @@ export const links = [
     route: "/categories",
     roles: ["admin"],
   },
+  {
+    key: "students-files",
+    name: "Documentos de Alumnos",
+    route: "/students-files",
+    roles: ["archivist", "admin"],
+  },
 ];

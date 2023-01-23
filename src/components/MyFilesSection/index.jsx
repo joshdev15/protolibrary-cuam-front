@@ -42,9 +42,11 @@ const MyFilesSection = () => {
     }
 
     setExists(copy);
+    setLoader(false);
   }, [privateF]);
 
   const onSubmit = (name) => {
+    setLoader(true);
     if (name === "cedula" && values.cedula.value !== undefined) {
       setPrivateFiles(values.cedula.value, "cedula");
     }

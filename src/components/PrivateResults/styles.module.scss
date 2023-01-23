@@ -1,0 +1,15 @@
+.result {
+  padding-top: 20px;
+  @media (max-width: 500px) {
+    margin-top: 188px;
+  }
+}
+
+.subcontainer {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 1920px;
+}
