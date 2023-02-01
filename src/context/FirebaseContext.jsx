@@ -146,6 +146,8 @@ const FirebaseProvider = ({ children }) => {
       setLogin(true);
       setUser();
       setAnonymous(false);
+      setPrivate([]);
+      setPrivateFiles([]);
       await anonymousLogin();
       firstLoad();
       notificate("info", "Sesión Cerrada");
