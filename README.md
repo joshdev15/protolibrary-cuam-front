@@ -24,8 +24,8 @@ la intencion de intentar algo similar.
 ## Tecnologías
 
 Este proyecto fue realizado con las siguientes tecnologías:
-* Node.js (v16.20.2); como entorno de ejecución.
-* React (18.2.0) como marco de trabajo de JavaScript.
-* Firebase (9.6.6) como base de datos, almacenamiento de archivos estaticos y autenticación.
+* __Node.js__ (v16.20.2); como entorno de ejecución.
+* __React__ (18.2.0) como marco de trabajo de JavaScript.
+* __Firebase__ como base de datos, almacenamiento de archivos estaticos y autenticación.
 
 Un cordial saludo a cualquier interesado.
