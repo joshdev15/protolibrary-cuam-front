@@ -62,10 +62,15 @@ const FirebaseProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const { user } = await signInWithEmailAndPassword(auth, email, password);
+      // console.log(user);
       if (user?.uid) {
-        localStorage.setItem("token", user.uid);
+        // localStorage.setItem("token", user.uid);
         const docRef = doc(db, "users", user.uid);
+        // console.log("docRef", docRef);
         const docSnap = await getDoc(docRef);
+        // console.log("docSnap", docSnap);
+        // console.log("docSnap exist", docSnap.exists());
+        // console.log("docSnap data", docSnap.data());
         if (docSnap.exists()) {
           setLogin(true);
           setUser(docSnap.data());
